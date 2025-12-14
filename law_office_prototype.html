@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Law Office Management System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            color: #333;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            background: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            color: #555;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .system-panel {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .panel-header {
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+        }
+
+        .panel-header h2 {
+            color: #333;
+            font-size: 24px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            color: #555;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        input, select, textarea {
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: transform 0.2s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            margin-top: 25px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        thead {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        th {
+            font-weight: 600;
+        }
+
+        tbody tr:hover {
+            background: #f8f9fa;
+        }
+
+        .status-badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-active {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-completed {
+            background: #cce5ff;
+            color: #004085;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .calendar-day {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 6px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .calendar-day:hover {
+            background: #e9ecef;
+            transform: scale(1.05);
+        }
+
+        .calendar-day.has-appointment {
+            background: #d4edda;
+            border: 2px solid #28a745;
+        }
+
+        .document-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border-left: 4px solid #667eea;
+        }
+
+        .document-card h3 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .document-meta {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .action-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+            margin-right: 5px;
+        }
+
+        .action-btn:hover {
+            background: #5568d3;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .stat-number {
+            font-size: 36px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-tabs {
+                flex-direction: column;
+            }
+
+            .calendar-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>⚖️ Law Office Management System</h1>
+            <p class="subtitle">Enterprise Architecture System Prototype - Final Project</p>
+        </header>
+
+        <div class="nav-tabs">
+            <button class="tab-btn active" onclick="showTab('dashboard')">Dashboard</button>
+            <button class="tab-btn" onclick="showTab('cases')">Case Management</button>
+            <button class="tab-btn" onclick="showTab('consultation')">Client Consultation</button>
+            <button class="tab-btn" onclick="showTab('documents')">Legal Documents</button>
+        </div>
+
+        <!-- Dashboard Tab -->
+        <div id="dashboard" class="tab-content active">
+            <div class="system-panel">
+                <div class="panel-header">
+                    <h2>Dashboard Overview</h2>
+                </div>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number">42</div>
+                        <div class="stat-label">Active Cases</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">18</div>
+                        <div class="stat-label">Pending Consultations</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">156</div>
+                        <div class="stat-label">Total Documents</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">8</div>
+                        <div class="stat-label">Upcoming Hearings</div>
+                    </div>
+                </div>
+
+                <h3 style="margin-bottom: 15px; color: #333;">Recent Activities</h3>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Activity</th>
+                                <th>Case/Client</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Dec 14, 2025</td>
+                                <td>New case filed</td>
+                                <td>Smith vs. Johnson Corp</td>
+                                <td><span class="status-badge status-active">Active</span></td>
+                            </tr>
+                            <tr>
+                                <td>Dec 13, 2025</td>
+                                <td>Consultation scheduled</td>
+                                <td>Maria Rodriguez</td>
+                                <td><span class="status-badge status-pending">Pending</span></td>
+                            </tr>
+                            <tr>
+                                <td>Dec 12, 2025</td>
+                                <td>Document uploaded</td>
+                                <td>Brown Estate Case</td>
+                                <td><span class="status-badge status-completed">Completed</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Case Management Tab -->
+        <div id="cases" class="tab-content">
+            <div class="system-panel">
+                <div class="panel-header">
+                    <h2>Case Management System</h2>
+                </div>
+
+                <form>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Case Number</label>
+                            <input type="text" placeholder="AUTO-GENERATED">
+                        </div>
+                        <div class="form-group">
+                            <label>Case Title</label>
+                            <input type="text" placeholder="Enter case title">
+                        </div>
+                        <div class="form-group">
+                            <label>Client Name</label>
+                            <input type="text" placeholder="Enter client name">
+                        </div>
+                        <div class="form-group">
+                            <label>Case Type</label>
+                            <select>
+                                <option>Select case type</option>
+                                <option>Civil</option>
+                                <option>Criminal</option>
+                                <option>Corporate</option>
+                                <option>Family Law</option>
+                                <option>Real Estate</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Filing Date</label>
+                            <input type="date">
+                        </div>
+                        <div class="form-group">
+                            <label>Status</label>
+                            <select>
+                                <option>Active</option>
+                                <option>Pending</option>
+                                <option>Closed</option>
+                                <option>On Hold</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Case Description</label>
+                        <textarea placeholder="Enter detailed case description"></textarea>
+                    </div>
+
+                    <div class="btn-group">
+                        <button type="submit" class="btn">Save Case</button>
+                        <button type="button" class="btn btn-secondary">Clear Form</button>
+                    </div>
+                </form>
+
+                <h3 style="margin-top: 40px; margin-bottom: 15px; color: #333;">Active Cases</h3>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Case No.</th>
+                                <th>Title</th>
+                                <th>Client</th>
+                                <th>Type</th>
+                                <th>Filing Date</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>2025-001</td>
+                                <td>Smith vs. Johnson Corp</td>
+                                <td>John Smith</td>
+                                <td>Civil</td>
+                                <td>Dec 14, 2025</td>
+                                <td><span class="status-badge status-active">Active</span></td>
+                                <td>
+                                    <button class="action-btn">View</button>
+                                    <button class="action-btn">Edit</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>2025-002</td>
+                                <td>Brown Estate Settlement</td>
+                                <td>Mary Brown</td>
+                                <td>Family Law</td>
+                                <td>Dec 10, 2025</td>
+                                <td><span class="status-badge status-pending">Pending</span></td>
+                                <td>
+                                    <button class="action-btn">View</button>
+                                    <button class="action-btn">Edit</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Client Consultation Tab -->
+        <div id="consultation" class="tab-content">
+            <div class="system-panel">
+                <div class="panel-header">
+                    <h2>Client Consultation Scheduler</h2>
+                </div>
+
+                <form>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Client Name</label>
+                            <input type="text" placeholder="Enter client name">
+                        </div>
+                        <div class="form-group">
+                            <label>Contact Number</label>
+                            <input type="tel" placeholder="Enter phone number">
+                        </div>
+                        <div class="form-group">
+                            <label>Email Address</label>
+                            <input type="email" placeholder="Enter email address">
+                        </div>
+                        <div class="form-group">
+                            <label>Consultation Type</label>
+                            <select>
+                                <option>Select type</option>
+                                <option>Initial Consultation</option>
+                                <option>Follow-up Meeting</option>
+                                <option>Document Review</option>
+                                <option>Court Preparation</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Consultation Date</label>
+                            <input type="date">
+                        </div>
+                        <div class="form-group">
+                            <label>Time Slot</label>
+                            <select>
+                                <option>09:00 AM - 10:00 AM</option>
+                                <option>10:00 AM - 11:00 AM</option>
+                                <option>11:00 AM - 12:00 PM</option>
+                                <option>01:00 PM - 02:00 PM</option>
+                                <option>02:00 PM - 03:00 PM</option>
+                                <option>03:00 PM - 04:00 PM</option>
+                                <option>04:00 PM - 05:00 PM</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Notes</label>
+                        <textarea placeholder="Additional notes about the consultation"></textarea>
+                    </div>
+
+                    <div class="btn-group">
+                        <button type="submit" class="btn">Schedule Consultation</button>
+                        <button type="button" class="btn btn-secondary">Clear Form</button>
+                    </div>
+                </form>
+
+                <h3 style="margin-top: 40px; margin-bottom: 15px; color: #333;">Upcoming Consultations</h3>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Client Name</th>
+                                <th>Date</th>
+                                <th>Time</th>
+                                <th>Type</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Maria Rodriguez</td>
+                                <td>Dec 15, 2025</td>
+                                <td>10:00 AM</td>
+                                <td>Initial Consultation</td>
+                                <td><span class="status-badge status-pending">Confirmed</span></td>
+                                <td>
+                                    <button class="action-btn">View</button>
+                                    <button class="action-btn">Reschedule</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>David Chen</td>
+                                <td>Dec 16, 2025</td>
+                                <td>02:00 PM</td>
+                                <td>Follow-up Meeting</td>
+                                <td><span class="status-badge status-pending">Confirmed</span></td>
+                                <td>
+                                    <button class="action-btn">View</button>
+                                    <button class="action-btn">Reschedule</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Legal Documents Tab -->
+        <div id="documents" class="tab-content">
+            <div class="system-panel">
+                <div class="panel-header">
+                    <h2>Legal Document Archive</h2>
+                </div>
+
+                <form>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Document Title</label>
+                            <input type="text" placeholder="Enter document title">
+                        </div>
+                        <div class="form-group">
+                            <label>Document Type</label>
+                            <select>
+                                <option>Select document type</option>
+                                <option>Contract</option>
+                                <option>Affidavit</option>
+                                <option>Motion</option>
+                                <option>Brief</option>
+                                <option>Agreement</option>
+                                <option>Court Order</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Related Case</label>
+                            <select>
+                                <option>Select case</option>
+                                <option>2025-001 - Smith vs. Johnson</option>
+                                <option>2025-002 - Brown Estate</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Upload Date</label>
+                            <input type="date">
+                        </div>
+                        <div class="form-group">
+                            <label>File Upload</label>
+                            <input type="file">
+                        </div>
+                        <div class="form-group">
+                            <label>Status</label>
+                            <select>
+                                <option>Draft</option>
+                                <option>Under Review</option>
+                                <option>Approved</option>
+                                <option>Filed</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Document Description</label>
+                        <textarea placeholder="Enter document description and notes"></textarea>
+                    </div>
+
+                    <div class="btn-group">
+                        <button type="submit" class="btn">Upload Document</button>
+                        <button type="button" class="btn btn-secondary">Clear Form</button>
+                    </div>
+                </form>
+
+                <h3 style="margin-top: 40px; margin-bottom: 15px; color: #333;">Recent Documents</h3>
+                
+                <div class="document-card">
+                    <h3>📄 Settlement Agreement Draft</h3>
+                    <div class="document-meta">
+                        Case: 2025-001 - Smith vs. Johnson | Uploaded: Dec 12, 2025 | Type: Agreement
+                    </div>
+                    <button class="action-btn">Download</button>
+                    <button class="action-btn">View</button>
+                    <button class="action-btn">Edit</button>
+                </div>
+
+                <div class="document-card">
+                    <h3>📄 Court Motion Filing</h3>
+                    <div class="document-meta">
+                        Case: 2025-002 - Brown Estate | Uploaded: Dec 10, 2025 | Type: Motion
+                    </div>
+                    <button class="action-btn">Download</button>
+                    <button class="action-btn">View</button>
+                    <button class="action-btn">Edit</button>
+                </div>
+
+                <div class="document-card">
+                    <h3>📄 Client Affidavit</h3>
+                    <div class="document-meta">
+                        Case: 2025-001 - Smith vs. Johnson | Uploaded: Dec 08, 2025 | Type: Affidavit
+                    </div>
+                    <button class="action-btn">Download</button>
+                    <button class="action-btn">View</button>
+                    <button class="action-btn">Edit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showTab(tabName) {
+            const tabs = document.querySelectorAll('.tab-content');
+            const buttons = document.querySelectorAll('.tab-btn');
+            
+            tabs.forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            buttons.forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        const forms = document.querySelectorAll('form');
+        forms.forEach(form => {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                alert('Form submitted successfully! (Prototype - No actual data saved)');
+            });
+        });
+    </script>
+</body>
+</html>
